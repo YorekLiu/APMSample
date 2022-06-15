@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="?android:attr/textColorPrimary"
+        android:text="默认线程栈空间大小" />
+
+    <TextView
+        android:id="@+id/textThreadStack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="?android:attr/textColorPrimary"
+        android:text="线程操作"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnTrimStack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="减少栈空间"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnStartThread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开启100个线程" />
+</LinearLayout>

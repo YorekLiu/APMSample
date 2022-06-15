@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btnMemoryLeakTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="内存泄露"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnDumpHprof"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dump hprof文件"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnShrinkHprof"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="shark库裁剪hprof"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnMatrixShrink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="matrix库裁剪hprof"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnKoomDumpAndShrink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="koom库dump并裁剪"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

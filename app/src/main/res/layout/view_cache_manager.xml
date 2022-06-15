@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="?android:attr/textColorPrimary"
+        android:text="内存信息" />
+
+    <TextView
+        android:id="@+id/textMemoryInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="?android:attr/textColorPrimary"
+        android:text="内存操作"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnAllocMemory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="申请20M内存"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnAllocNativeMemory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="申请20M native内存" />
+
+    <Button
+        android:id="@+id/btnAllocVSS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="申请500MB vss" />
+</LinearLayout>
