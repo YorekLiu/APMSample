@@ -1,4 +1,4 @@
-package xyz.yorek.performance.memory
+package xyz.yorek.performance.memory.case
 
 import android.content.ComponentCallbacks2
 import android.content.Context
@@ -10,6 +10,7 @@ import xyz.yorek.performance.PerformancePluginService
 import xyz.yorek.performance.base.CaseUIWidgetProvider
 import xyz.yorek.performance.base.ITick
 import xyz.yorek.performance.databinding.ViewCacheManagerBinding
+import xyz.yorek.performance.memory.MemoryPlugin
 
 class CacheManagerCaseUIWidgetProvider : CaseUIWidgetProvider(), ITick {
 

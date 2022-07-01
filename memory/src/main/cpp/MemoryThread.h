@@ -8,6 +8,15 @@
 #include <dlfcn.h>
 #include <pthread.h>
 
+#define LOGE(TAG, FMT, args...)
+#ifndef LIKELY
+#define LIKELY(cond) (__builtin_expect(!!(cond), 1))
+#endif
+
+#ifndef UNLIKELY
+#define UNLIKELY(cond) (__builtin_expect(!!(cond), 0))
+#endif
+
 namespace memory_thread {
     typedef void* (*pthread_routine_t)(void*);
 

@@ -62,6 +62,9 @@ public final class ID {
         sb.append("0x");
         for (byte b : mIdBytes) {
             final int eb = b & 0xFF;
+            if (eb <= 0x0F) {
+                sb.append("0");
+            }
             sb.append(Integer.toHexString(eb));
         }
         return sb.toString();

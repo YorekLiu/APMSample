@@ -1,4 +1,4 @@
-package xyz.yorek.performance.memory
+package xyz.yorek.performance.memory.case
 
 import android.content.Context
 import android.content.Intent
@@ -6,26 +6,29 @@ import android.os.Debug
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import com.kwai.koom.base.MonitorLog
-import com.kwai.koom.base.MonitorManager
 import com.kwai.koom.javaoom.hprof.ForkStripHeapDumper
-import com.kwai.koom.javaoom.monitor.OOMHprofUploader
-import com.kwai.koom.javaoom.monitor.OOMMonitor
-import com.kwai.koom.javaoom.monitor.OOMMonitorConfig
-import com.kwai.koom.javaoom.monitor.OOMReportUploader
 import com.tencent.matrix.resource.hproflib.HprofBufferShrinker
 import xyz.yorek.performance.base.CaseUIWidgetProvider
 import xyz.yorek.performance.databinding.ViewMemoryLeakBinding
+import xyz.yorek.performance.memory.MemoryLeakActivity
 import xyz.yorek.performance.utils.TimeCost
 import xyz.yorek.performance.utils.Units
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.concurrent.Executors
 import java.util.concurrent.FutureTask
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 class MemoryLeakCaseUIWidgetProvider : CaseUIWidgetProvider() {
+    init {
+        System.loadLibrary("appcase")
+    }
+
     private lateinit var mViewBinding: ViewMemoryLeakBinding
 
-    override fun getTitle(): String = "内存泄露&OOM检测"
+    override fun getTitle(): String = "内存泄露&OOM检测&堆转储文件裁剪"
 
     override fun onCreate(context: Context): View {
         mViewBinding = ViewMemoryLeakBinding.inflate(LayoutInflater.from(context))
@@ -33,18 +36,24 @@ class MemoryLeakCaseUIWidgetProvider : CaseUIWidgetProvider() {
     }
 
     override fun onInit() {
-        initKOOM()
-
-        // 原始hprof文件 154MB -> shark shrink裁剪效果不明显(少了不足1M)/matrix 26M
-        // koom 写时裁剪 17M -> 还原后142.5M
+        // 原始hprof文件 154MB -> shark shrink裁剪效果不明显(少了不足1M)/matrix 26M -> zipped 7M
+        // koom 写时裁剪 17M -> zipped 3M -> 还原后142.5M
         // origin: 1590 0 57935 59915038 128618760 571736811
         // shark:  1590 0 57935 59915038 128618760 571736811
         // matrix: 1586 0 45910 59915038 1505172 64985790
-        // koom must be cropped:
+        // koom will shrink itself:
         // koom:   1617 0 36894 59865962 128060711 572008816
         mViewBinding.btnMemoryLeakTest.setOnClickListener {
             mContext.startActivity(Intent(mContext, MemoryLeakActivity::class.java))
         }
+
+//        mViewBinding.btnNativeMemoryLeakTest.setOnClickListener {
+//            // demangler
+//            // c++filt -n _Znwj
+//            // http://demangler.com/
+//            // http://www.kegel.com/mangle.html
+//            nativeLeak()
+//        }
 
         mViewBinding.btnDumpHprof.setOnClickListener {
             dumpHprof()
@@ -59,7 +68,11 @@ class MemoryLeakCaseUIWidgetProvider : CaseUIWidgetProvider() {
         }
 
         mViewBinding.btnKoomDumpAndShrink.setOnClickListener {
-            ForkStripHeapDumper.getInstance().dump(getHprofFile().absolutePath)
+            ForkStripHeapDumper.getInstance().dump(getStrippedHprofFile().absolutePath)
+        }
+
+        mViewBinding.btnZipHprof.setOnClickListener {
+            zipHprof()
         }
     }
 
@@ -106,31 +119,39 @@ class MemoryLeakCaseUIWidgetProvider : CaseUIWidgetProvider() {
         return File(mContext.getExternalFilesDir(null), "test_stripped.hprof")
     }
 
-    private fun initKOOM() {
-        val config = OOMMonitorConfig.Builder()
-            .setThreadThreshold(50) //50 only for test! Please use default value!
-            .setFdThreshold(300) // 300 only for test! Please use default value!
-            .setHeapThreshold(0.9f) // 0.9f for test! Please use default value!
-            .setVssSizeThreshold(1_000_000) // 1_000_000 for test! Please use default value!
-            .setMaxOverThresholdCount(1) // 1 for test! Please use default value!
-            .setAnalysisMaxTimesPerVersion(3) // Consider use default value！
-            .setAnalysisPeriodPerVersion(15 * 24 * 60 * 60 * 1000) // Consider use default value！
-            .setLoopInterval(15_000) // 5_000 for test! Please use default value!
-            .setEnableHprofDumpAnalysis(true)
-            .setHprofUploader(object : OOMHprofUploader {
-                override fun upload(file: File, type: OOMHprofUploader.HprofType) {
-                    MonitorLog.e(TAG, "todo, upload hprof ${file.name} if necessary")
-                }
-            })
-            .setReportUploader(object : OOMReportUploader {
-                override fun upload(file: File, content: String) {
-                    MonitorLog.i(TAG, content)
-                    MonitorLog.e(TAG, "todo, upload report ${file.name} if necessary")
-                }
-            })
-            .build()
+    private fun getStrippedHprofZipFile(): File {
+        return File(mContext.getExternalFilesDir(null), "test_stripped.zip")
+    }
 
-        MonitorManager.addMonitorConfig(config)
-        OOMMonitor.startLoop()
+    private fun zipHprof() {
+        val strippedFile = getStrippedHprofFile()
+        if (strippedFile.exists() && strippedFile.isFile) {
+            if (!strippedFile.canRead()) {
+                strippedFile.setReadable(true)
+            }
+            try {
+                val zippedFile = getStrippedHprofZipFile()
+                val fos = FileOutputStream(zippedFile)
+                val zos = ZipOutputStream(fos)
+
+                val fis = FileInputStream(strippedFile)
+                val entry = ZipEntry(strippedFile.name)
+                entry.method = ZipEntry.DEFLATED
+                zos.putNextEntry(entry)
+
+                val byteArray = ByteArray(4096)
+                var length: Int
+                while (fis.read(byteArray).apply { length = this } >= 0) {
+                    zos.write(byteArray, 0, length)
+                }
+                zos.close()
+                fis.close()
+                fos.close()
+
+                Log.d(TAG, "strippedFile size=${Units.convertB2MB(strippedFile.length())}MB, zippedFile size=${Units.convertB2MB(zippedFile.length())}MB")
+            } catch (t: Throwable) {
+                t.printStackTrace()
+            }
+        }
     }
 }

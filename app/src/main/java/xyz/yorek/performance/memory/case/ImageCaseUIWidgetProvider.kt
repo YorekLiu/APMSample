@@ -1,4 +1,4 @@
-package xyz.yorek.performance.memory
+package xyz.yorek.performance.memory.case
 
 import android.content.Context
 import android.graphics.Bitmap

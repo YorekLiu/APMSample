@@ -1,4 +1,4 @@
-package xyz.yorek.performance.memory
+package xyz.yorek.performance.memory.case
 
 import android.content.Context
 import android.os.HandlerThread
@@ -7,6 +7,7 @@ import android.view.View
 import xyz.yorek.performance.PerformancePluginService
 import xyz.yorek.performance.base.CaseUIWidgetProvider
 import xyz.yorek.performance.databinding.ViewThreadBinding
+import xyz.yorek.performance.memory.MemoryPlugin
 import xyz.yorek.performance.utils.Units
 
 class ThreadCaseUIWidgetProvider : CaseUIWidgetProvider() {

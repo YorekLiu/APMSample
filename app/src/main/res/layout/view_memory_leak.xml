@@ -39,4 +39,11 @@
         android:text="koom库dump并裁剪"
         android:layout_marginTop="8dp" />
 
+    <Button
+        android:id="@+id/btnZipHprof"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="zip hprof文件"
+        android:layout_marginTop="8dp" />
+
 </LinearLayout>

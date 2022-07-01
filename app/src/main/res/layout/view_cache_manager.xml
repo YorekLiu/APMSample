@@ -44,5 +44,5 @@
         android:id="@+id/btnAllocVSS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="申请500MB vss" />
+        android:text="申请1G vss" />
 </LinearLayout>

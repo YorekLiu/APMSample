@@ -27,7 +27,8 @@ add_library( # Sets the name of the library.
 
              # Provides a relative path to your source file(s).
              MemoryJNI.cpp
-             MemoryThread.cpp)
+             MemoryThread.cpp
+             MemoryAllocTracker.cpp)
 
 target_include_directories(
         ${TARGET}

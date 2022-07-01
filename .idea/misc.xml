@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/layout/view_cache_manager.xml" value="0.1" />
         <entry key="app/src/main/res/layout/view_manage_image.xml" value="0.33016304347826086" />
         <entry key="app/src/main/res/layout/view_memory_leak.xml" value="0.30117753623188404" />
+        <entry key="app/src/main/res/layout/view_process.xml" value="0.1" />
         <entry key="app/src/main/res/layout/view_thread.xml" value="0.2595108695652174" />
         <entry key="app/src/main/res/layout/view_wild_thread.xml" value="0.2595108695652174" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.176" />

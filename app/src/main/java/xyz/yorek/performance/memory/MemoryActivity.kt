@@ -7,6 +7,7 @@ import xyz.yorek.performance.base.ITick
 import xyz.yorek.performance.base.ViewBindingBaseActivity
 import xyz.yorek.performance.databinding.ActivityMemoryBinding
 import xyz.yorek.performance.databinding.ListItemCaseBinding
+import xyz.yorek.performance.memory.case.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -47,6 +48,7 @@ class MemoryActivity : ViewBindingBaseActivity<ActivityMemoryBinding>() {
     private fun getCaseUIWidgetProviderList() = listOf<Class<out CaseUIWidgetProvider>>(
         DevicePerformanceCaseUIWidgetProvider::class.java,
         CacheManagerCaseUIWidgetProvider::class.java,
+        ProcessCaseUIWidgetProvider::class.java,
         ThreadCaseUIWidgetProvider::class.java,
         WildThreadCaseUIWidgetProvider::class.java,
         ImageCaseUIWidgetProvider::class.java,

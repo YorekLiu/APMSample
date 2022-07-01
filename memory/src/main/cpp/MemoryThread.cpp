@@ -15,15 +15,6 @@
 #define TAG "memory_thread"
 #define ORIGINAL_LIB "libc.so"
 
-#define LOGE(TAG, FMT, args...)
-#ifndef LIKELY
-#define LIKELY(cond) (__builtin_expect(!!(cond), 1))
-#endif
-
-#ifndef UNLIKELY
-#define UNLIKELY(cond) (__builtin_expect(!!(cond), 0))
-#endif
-
 DECLARE_HOOK_ORIG(int, pthread_create, pthread_t*, pthread_attr_t const*, memory_thread::pthread_routine_t, void*);
 
 DEFINE_HOOK_FUN(int, pthread_create,
