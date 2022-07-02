@@ -18,7 +18,12 @@ abstract class ViewBindingBaseActivity<T : ViewBinding> : BaseActivity() {
 
     @Suppress("UNCHECKED_CAST")
     private fun getViewBindingInstance(): T {
-        val viewBindingType = (this::class.java.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+        val viewBindingType = if (this::class.java.genericSuperclass is ParameterizedType) {
+            (this::class.java.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+        } else {
+            (this::class.java.superclass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+        }
+
         val viewBindingInflateMethod = viewBindingType.getDeclaredMethod("inflate", LayoutInflater::class.java)
 
         return viewBindingInflateMethod.invoke(null, layoutInflater) as T

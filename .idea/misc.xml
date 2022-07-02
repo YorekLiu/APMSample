@@ -4,26 +4,6 @@
     <asm skipDebug="false" skipFrames="false" skipCode="false" expandFrames="false" />
     <groovy codeStyle="LEGACY" />
   </component>
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="../../../../../layout/custom_preview.xml" value="0.13387151025899766" />
-        <entry key="../../../Library/Android/sdk/platforms/android-30/data/res/layout/simple_list_item_1.xml" value="0.1889564336372847" />
-        <entry key="app/src/main/res/drawable/shape_white_r16.xml" value="0.102" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.203125" />
-        <entry key="app/src/main/res/layout/activity_memory.xml" value="0.1889564336372847" />
-        <entry key="app/src/main/res/layout/activity_memory_leak.xml" value="0.30117753623188404" />
-        <entry key="app/src/main/res/layout/list_item_case.xml" value="0.1884498480243161" />
-        <entry key="app/src/main/res/layout/view_cache_manager.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/view_manage_image.xml" value="0.33016304347826086" />
-        <entry key="app/src/main/res/layout/view_memory_leak.xml" value="0.30117753623188404" />
-        <entry key="app/src/main/res/layout/view_process.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/view_thread.xml" value="0.2595108695652174" />
-        <entry key="app/src/main/res/layout/view_wild_thread.xml" value="0.2595108695652174" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.176" />
-      </map>
-    </option>
-  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

@@ -34,7 +34,7 @@ object MemoryMethodInst {
         }
     }
 
-    private fun submitRunnableToPool(target: Runnable) {
+    fun submitRunnableToPool(target: Runnable) {
         ensureExecutor()
         sExecutorService.submit(target)
     }

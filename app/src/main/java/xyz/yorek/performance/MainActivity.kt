@@ -13,8 +13,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.kwai.koom.base.loadSo
+import xyz.yorek.performance.apksize.SoDynamicLoader
 import xyz.yorek.performance.base.ViewBindingBaseActivity
 import xyz.yorek.performance.databinding.ActivityMainBinding
+import xyz.yorek.performance.memory.MemoryMethodInst
+import java.util.concurrent.Executors
 
 class MainActivity : ViewBindingBaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +37,20 @@ class MainActivity : ViewBindingBaseActivity<ActivityMainBinding>() {
             this.layoutManager = LinearLayoutManager(this@MainActivity)
             this.adapter = MainAdapter(this@MainActivity, activities)
             this.setHasFixedSize(true)
+        }
+    }
+
+    private fun loadSo(action: () -> Unit) {
+        MemoryMethodInst.submitRunnableToPool {
+            SoDynamicLoader.extract {
+                action()
+            }
+        }
+    }
+
+    override fun startActivity(intent: Intent?) {
+        loadSo {
+            super.startActivity(intent)
         }
     }
 

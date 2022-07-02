@@ -4,15 +4,17 @@ pluginManagement {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
         mavenLocal()
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
         mavenLocal()
     }
 }
@@ -22,3 +24,4 @@ include ':xhook'
 include ':memory'
 include ':base'
 include ':faker'
+//include ':apm-plugins'

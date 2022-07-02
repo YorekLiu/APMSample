@@ -1,0 +1,2 @@
+-keep class com.kwai.koom.javaoom.monitor.OOMMonitor {*;}
+-keep class com.kwai.koom.javaoom.monitor.OOMMonitorConfig {*;}

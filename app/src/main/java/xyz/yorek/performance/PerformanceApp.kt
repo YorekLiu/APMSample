@@ -8,6 +8,7 @@ import com.kwai.koom.javaoom.monitor.OOMHprofUploader
 import com.kwai.koom.javaoom.monitor.OOMMonitor
 import com.kwai.koom.javaoom.monitor.OOMMonitorConfig
 import com.kwai.koom.javaoom.monitor.OOMReportUploader
+import xyz.yorek.performance.apksize.SoDynamicLoader
 import xyz.yorek.performance.memory.MemoryPlugin
 import java.io.File
 
@@ -20,6 +21,8 @@ class PerformanceApp : Application() {
         PerformancePluginService.start()
 
         initKOOM()
+
+        SoDynamicLoader.init(this)
     }
 
     private fun initKOOM() {

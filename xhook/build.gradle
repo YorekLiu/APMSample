@@ -5,6 +5,7 @@ plugins {
 
 android {
     compileSdk rootProject.ext.android.compileSdk
+    ndkVersion rootProject.ext.android.ndkVersion
 
     defaultConfig {
         minSdk rootProject.ext.android.minSdk
