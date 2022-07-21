@@ -26,7 +26,7 @@ object SoDynamicLoader {
 
     private const val NATIVE_DIR = "dllibs"
     private const val PACKED_APP_LIBS_NAME = "libs_asset.zip"
-    val SO_MODE = Mode.ZIP
+    val SO_MODE = Mode.NONE
 
     enum class Mode(
         val label: String

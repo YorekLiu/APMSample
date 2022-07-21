@@ -13,6 +13,10 @@ object ApkSizeInst {
     @MethodProxy(clazz = [System::class], method = "loadLibrary")
     fun loadLibrary(libName: String) {
         Log.d(TAG, "loadLibrary $libName")
-        SoDynamicLoader.load(libName)
+        if (SoDynamicLoader.SO_MODE == SoDynamicLoader.Mode.NONE) {
+            System.loadLibrary(libName)
+        } else {
+            SoDynamicLoader.load(libName)
+        }
     }
 }

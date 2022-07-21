@@ -169,6 +169,6 @@ apmSample {
         // none
         // asset
         // zip
-        mode = "zip"
+        mode = "none"
     }
 }
