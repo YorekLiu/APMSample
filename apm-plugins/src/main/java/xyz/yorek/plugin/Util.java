@@ -1,7 +1,5 @@
 package xyz.yorek.plugin;
 
-import net.rubygrapefruit.platform.Process;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Closeable;

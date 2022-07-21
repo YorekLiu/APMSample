@@ -59,28 +59,35 @@ open class MinifySoTask : DefaultTask() {
         // TODO 7z path
         val ret = Util.sevenZipInputDir(File(nativeLibs), libsZipAbsolutePath, "${project.rootDir}/7zz")
         if (ret) {
-            replaceSo2Empty(File(nativeLibs))
+            replaceSoWithEmpty(File(nativeLibs))
         }
 
         log(TAG, "minify flag: ${ret}, libs location:$nativeLibs, asset location:${libsZipAbsolutePath.absolutePath}")
     }
 
-    private fun replaceSo2Empty(file: File) {
+    private fun minifySo2Server(variantName: String, abiFilter: String) {
+        val nativeLibs = "${project.buildDir.absolutePath}/intermediates/stripped_native_libs/${variantName.lowercase()}/out/lib/$abiFilter"
+
+        val outputDir = "${project.buildDir.absolutePath}/outputs/libs/${variantName.lowercase()}/$abiFilter"
+
+        File(nativeLibs).listFiles()?.forEach {
+            Util.copyFileUsingStream(it, File(outputDir, it.name))
+        }
+        replaceSoWithEmpty(File(nativeLibs))
+
+        log(TAG, "minify , libs location:$nativeLibs, libs location:${outputDir}")
+    }
+
+    private fun replaceSoWithEmpty(file: File) {
         if (file.exists() && file.canRead() && file.canWrite()) {
             if (file.isDirectory) {
                 for (f in file.listFiles()!!) {
-                    replaceSo2Empty(f)
+                    replaceSoWithEmpty(f)
                 }
             } else {
                 file.delete()
                 File(file.absolutePath).createNewFile()
             }
         }
-    }
-
-    private fun minifySo2Server(variantName: String, abiFilter: String) {
-        val assetDir = "${project.buildDir.absolutePath}/intermediates/assets/${variantName.lowercase()}/merge${variantName}Assets/"
-        val nativeLibs = "${project.buildDir.absolutePath}/intermediates/merged_native_libs/${variantName.lowercase()}/out/lib/"
-
     }
 }
