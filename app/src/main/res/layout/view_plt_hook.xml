@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etSoAddr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:text="79c9c40000"
+        android:hint="libappcase.so的基地址(16进制)"/>
+
+    <EditText
+        android:id="@+id/etFuncAddr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="38490"
+        android:hint="函数地址(16进制)"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnHook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hook"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

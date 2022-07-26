@@ -39,8 +39,8 @@ typedef struct
     ElfW(Addr)  base_addr;
     ElfW(Addr)  bias_addr;
     
-    ElfW(Ehdr) *ehdr;
-    ElfW(Phdr) *phdr;
+    ElfW(Ehdr) *ehdr; // elf_header
+    ElfW(Phdr) *phdr; // program_header_table
 
     ElfW(Dyn)  *dyn; //.dynamic
     ElfW(Word)  dyn_sz;

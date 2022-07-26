@@ -383,7 +383,7 @@ static int xh_elf_gnu_hash_lookup_def(xh_elf_t *self, const char *symbol, uint32
     size_t mask = 0
         | (size_t)1 << (hash % elfclass_bits)
         | (size_t)1 << ((hash >> self->bloom_shift) % elfclass_bits);
-    
+
     //if at least one bit is not set, this symbol is surely missing
     if((word & mask) != mask) return XH_ERRNO_NOTFND;
 
@@ -420,6 +420,7 @@ static int xh_elf_gnu_hash_lookup_undef(xh_elf_t *self, const char *symbol, uint
     for(i = 0; i < self->symoffset; i++)
     {
         const char *symname = self->strtab + self->symtab[i].st_name;
+        XH_LOG_DEBUG("%s at %d st.name=%u sizeof(Sym)=%lu (GNU_HASH UNDEF)\n", symname, i, self->symtab[i].st_name, sizeof(ElfW(Sym)));
         if(0 == strcmp(symname, symbol))
         {
             *symidx = i;
@@ -803,6 +804,7 @@ int xh_elf_init(xh_elf_t *self, uintptr_t base_addr, const char *pathname)
     uint32_t  *raw;
     for(; dyn < dyn_end; dyn++)
     {
+        // readelf -S path
         switch(dyn->d_tag) //segmentation fault sometimes
         {
         case DT_NULL:
@@ -811,38 +813,45 @@ int xh_elf_init(xh_elf_t *self, uintptr_t base_addr, const char *pathname)
             break;
         case DT_STRTAB:
             {
+                // 0x0d10
                 self->strtab = (const char *)(self->bias_addr + dyn->d_un.d_ptr);
                 if((ElfW(Addr))(self->strtab) < self->base_addr) return XH_ERRNO_FORMAT;
                 break;
             }
         case DT_SYMTAB:
             {
+                // 0x02f8
                 self->symtab = (ElfW(Sym) *)(self->bias_addr + dyn->d_un.d_ptr);
                 if((ElfW(Addr))(self->symtab) < self->base_addr) return XH_ERRNO_FORMAT;
                 break;
             }
         case DT_PLTREL:
             //use rel or rela?
+            // 0x07, true
             self->is_use_rela = (dyn->d_un.d_val == DT_RELA ? 1 : 0);
             break;
         case DT_JMPREL:
             {
+                // 0x1270
                 self->relplt = (ElfW(Addr))(self->bias_addr + dyn->d_un.d_ptr);
                 if((ElfW(Addr))(self->relplt) < self->base_addr) return XH_ERRNO_FORMAT;
                 break;
             }
         case DT_PLTRELSZ:
+            // 0x0510
             self->relplt_sz = dyn->d_un.d_val;
             break;
         case DT_REL:
         case DT_RELA:
             {
+                // 0x110e
                 self->reldyn = (ElfW(Addr))(self->bias_addr + dyn->d_un.d_ptr);
                 if((ElfW(Addr))(self->reldyn) < self->base_addr) return XH_ERRNO_FORMAT;
                 break;
             }
         case DT_RELSZ:
         case DT_RELASZ:
+            // 0x0009
             self->reldyn_sz = dyn->d_un.d_val;
             break;
         case DT_ANDROID_REL:
@@ -871,15 +880,16 @@ int xh_elf_init(xh_elf_t *self, uintptr_t base_addr, const char *pathname)
             }
         case DT_GNU_HASH:
             {
+                // 0x0a00
                 raw = (uint32_t *)(self->bias_addr + dyn->d_un.d_ptr);
                 if((ElfW(Addr))raw < self->base_addr) return XH_ERRNO_FORMAT;
-                self->bucket_cnt  = raw[0];
-                self->symoffset   = raw[1];
-                self->bloom_sz    = raw[2];
-                self->bloom_shift = raw[3];
-                self->bloom       = (ElfW(Addr) *)(&raw[4]);
-                self->bucket      = (uint32_t *)(&(self->bloom[self->bloom_sz]));
-                self->chain       = (uint32_t *)(&(self->bucket[self->bucket_cnt]));
+                self->bucket_cnt  = raw[0]; // 07
+                self->symoffset   = raw[1]; // 37
+                self->bloom_sz    = raw[2]; // 4
+                self->bloom_shift = raw[3]; // 26
+                self->bloom       = (ElfW(Addr) *)(&raw[4]);  // 0x0a10
+                self->bucket      = (uint32_t *)(&(self->bloom[self->bloom_sz])); // 0x0a30
+                self->chain       = (uint32_t *)(&(self->bucket[self->bucket_cnt])); // 0x0a4C
                 self->is_use_gnu_hash = 1;
                 break;
             }
@@ -945,6 +955,7 @@ static int xh_elf_find_and_replace_func(xh_elf_t *self, const char *section,
     if(self->is_use_rela)
     {
         rela = (ElfW(Rela) *)rel_common;
+        // 0x00000012 00000402
         r_info = rela->r_info;
         r_offset = rela->r_offset;
     }
@@ -960,6 +971,7 @@ static int xh_elf_find_and_replace_func(xh_elf_t *self, const char *section,
     if(r_sym != symidx) return 0;
 
     //check type
+    // 0x402
     r_type = XH_ELF_R_TYPE(r_info);
     if(is_plt && r_type != XH_ELF_R_GENERIC_JUMP_SLOT) return 0;
     if(!is_plt && (r_type != XH_ELF_R_GENERIC_GLOB_DAT && r_type != XH_ELF_R_GENERIC_ABS)) return 0;
@@ -1005,6 +1017,9 @@ int xh_elf_hook(xh_elf_t *self, const char *symbol, void *new_func, void **old_f
     //replace for .rel(a).plt
     if(0 != self->relplt)
     {
+        // 0x1270 0x0510 true
+        // 0x1270 - 0x1780
+        // rel_common 16 * 3 hex
         xh_elf_plain_reloc_iterator_init(&plain_iter, self->relplt, self->relplt_sz, self->is_use_rela);
         while(NULL != (rel_common = xh_elf_plain_reloc_iterator_next(&plain_iter)))
         {

@@ -330,6 +330,7 @@ static void xh_core_refresh_impl()
 
     while(fgets(line, sizeof(line), fp))
     {
+        // *表示忽略，%n不计入返回值
         if(sscanf(line, "%"PRIxPTR"-%*lx %4s %lx %*x:%*x %*d%n", &base_addr, perm, &offset, &pathname_pos) != 3) continue;
 
          // do not touch the shared memory

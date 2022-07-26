@@ -8,8 +8,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/list_item_case.xml" value="0.13069908814589665" />
+        <entry key="app/src/main/res/layout/view_anr_log.xml" value="0.15678824721377912" />
         <entry key="app/src/main/res/layout/view_manage_image.xml" value="0.13069908814589665" />
         <entry key="app/src/main/res/layout/view_memory_leak.xml" value="0.13069908814589665" />
+        <entry key="app/src/main/res/layout/view_plt_hook.xml" value="0.3375" />
         <entry key="app/src/main/res/layout/view_process.xml" value="0.13069908814589665" />
         <entry key="app/src/main/res/layout/view_thread.xml" value="0.13069908814589665" />
         <entry key="app/src/main/res/layout/view_wild_thread.xml" value="0.13069908814589665" />

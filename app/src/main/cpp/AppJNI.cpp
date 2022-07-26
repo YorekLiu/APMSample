@@ -37,3 +37,39 @@ Java_xyz_yorek_performance_memory_case_ProcessCaseUIWidgetProvider_fork(JNIEnv *
         __android_log_print(ANDROID_LOG_INFO, "AppJNI", "fork success");
     }
 }
+
+#pragma PLTHook
+#define PAGE_START(addr) ((addr) & PAGE_MASK)
+#define PAGE_END(addr)   (PAGE_START(addr + sizeof(uintptr_t) - 1) + PAGE_SIZE)
+#define PAGE_COVER(addr) (PAGE_END(addr) - PAGE_START(addr))
+
+int my_log_print(int prio, const char* tag, const char* fmt, ...) {
+    return __android_log_print(ANDROID_LOG_INFO, "AppJNI", "What r u taking about?");
+}
+
+void hook(uintptr_t base_addr, int32_t address)
+{
+    uintptr_t  addr;
+    void* new_func = (void *) my_log_print;
+
+    addr = base_addr + address;
+
+    //add write permission
+    mprotect((void *)PAGE_START(addr), PAGE_COVER(addr), PROT_READ | PROT_WRITE);
+
+    //replace the function address
+    *(void **)addr = new_func;
+
+    //clear instruction cache
+    __builtin___clear_cache(static_cast<char *>((void *) PAGE_START(addr)),
+                            static_cast<char *>((void *) PAGE_END(addr)));
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_xyz_yorek_performance_tools_case_PLTHookCaseUIWidgetProvider_hook(JNIEnv *env, jobject thiz,
+                                                                       jlong base_addr,
+                                                                       jint address) {
+    hook(base_addr, address);
+    __android_log_print(ANDROID_LOG_INFO, "AppJNI", "Hello, World!");
+}

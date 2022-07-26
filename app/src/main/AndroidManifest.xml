@@ -26,7 +26,8 @@
         </activity>
         <activity android:name=".memory.MemoryActivity" android:label="内存优化示例" android:exported="true" />
         <activity android:name=".memory.MemoryLeakActivity" android:label="内存泄露演示" android:exported="false" />
-        <activity android:name=".apksize.ApkSizeActivity"  android:label="包体积优化示例" android:exported="true" />
+        <activity android:name=".apksize.ApkSizeActivity" android:label="包体积优化示例" android:exported="true" />
+        <activity android:name=".tools.ToolsActivity" android:label="工具示例" android:exported="true" />
     </application>
 
 </manifest>

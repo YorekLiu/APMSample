@@ -66,6 +66,8 @@ namespace memory_thread {
     void InstallHook() {
         FETCH_ORIGIN_FUNC(pthread_create)
 
+        xhook_enable_debug(1);
+        xhook_clear();
         xhook_register(".*/.*\\.so$", "pthread_create",
                        (void *) HANDLER_FUNC_NAME(pthread_create), nullptr);
         xhook_refresh(0);
