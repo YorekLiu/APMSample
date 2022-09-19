@@ -71,5 +71,4 @@ Java_xyz_yorek_performance_tools_case_PLTHookCaseUIWidgetProvider_hook(JNIEnv *e
                                                                        jlong base_addr,
                                                                        jint address) {
     hook(base_addr, address);
-    __android_log_print(ANDROID_LOG_INFO, "AppJNI", "Hello, World!");
 }

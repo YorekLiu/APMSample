@@ -7,24 +7,35 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.graphics.Insets
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kwai.koom.base.loadSo
 import xyz.yorek.performance.apksize.SoDynamicLoader
 import xyz.yorek.performance.base.ViewBindingBaseActivity
 import xyz.yorek.performance.databinding.ActivityMainBinding
 import xyz.yorek.performance.memory.MemoryMethodInst
-import java.util.concurrent.Executors
 
 class MainActivity : ViewBindingBaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityMainBinding.inflate(layoutInflater)
         initList()
+    }
+
+    override fun onSystemWindowInsetsApplied(systemWindowInsets: Insets) {
+        Log.d(TAG, "onSystemWindowInsetsApplied: systemWindowInsets=$systemWindowInsets")
+        val view = mBinding.recyclerView
+        view.setPaddingRelative(
+            view.paddingStart,
+            view.paddingTop + systemWindowInsets.top,
+            view.paddingEnd,
+            view.paddingBottom + systemWindowInsets.bottom,
+        )
     }
 
     private fun initList() {

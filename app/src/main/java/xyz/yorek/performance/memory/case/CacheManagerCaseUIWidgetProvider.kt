@@ -46,6 +46,7 @@ class CacheManagerCaseUIWidgetProvider : CaseUIWidgetProvider(), ITick {
             // pss不足时才会出发，与Java堆内存无关
             Log.d(TAG, "onTrimMemory level=$level")
             TestCache.clear()
+            Runtime.getRuntime().gc()
         }
     }
 

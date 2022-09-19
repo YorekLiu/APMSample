@@ -2,6 +2,7 @@ package xyz.yorek.performance.base
 
 import android.app.Activity
 import android.os.Bundle
+import androidx.core.graphics.Insets
 import xyz.yorek.performance.databinding.ActivityBasePerformanceBinding
 import xyz.yorek.performance.databinding.ListItemCaseBinding
 import java.util.concurrent.ExecutorService
@@ -39,6 +40,16 @@ abstract class BasePerformanceActivity : ViewBindingBaseActivity<ActivityBasePer
 
             mBinding.caseLists.addView(listItemCaseBinding.root)
         }
+    }
+
+    override fun onSystemWindowInsetsApplied(systemWindowInsets: Insets) {
+        val view = mBinding.caseLists
+        view.setPaddingRelative(
+            view.paddingStart,
+            view.paddingTop + systemWindowInsets.top,
+            view.paddingEnd,
+            view.paddingBottom + systemWindowInsets.bottom,
+        )
     }
 
     abstract fun getCaseUIWidgetProviderList(): List<Class<out CaseUIWidgetProvider>>

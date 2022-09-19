@@ -5,6 +5,7 @@ import android.content.ComponentCallbacks2
 import android.content.Context
 import xyz.yorek.performance.base.AbsPerformancePlugin
 import xyz.yorek.performance.memory.device.DevicePerformance
+import xyz.yorek.performance.memory.device.GCDump
 import xyz.yorek.performance.memory.device.MemoryDump
 import xyz.yorek.performance.memory.thread.ThreadStackTrim
 import xyz.yorek.performance.utils.TimeCost
@@ -23,21 +24,12 @@ class MemoryPlugin(
     }
 
     override fun init() {
-
-//        val stringBuilder = StringBuilder()
-//        MemoryDump.dump(stringBuilder)
-//        Log.d(TAG, stringBuilder.toString())
-//
-//        Memory.javaHeapUsage(context)
-//
-//        val originalStackSize = ThreadStackTrim.getStackSize()
-//        Log.i(TAG, "originalStackSize is ${Units.convertB2KB(originalStackSize)}")
-//
-////        ThreadStackTrim.installHook()
     }
 
     override fun start() {
         super.start()
+        GCDump.start()
+
         mExecutorService?.shutdownNow()
         mExecutorService = Executors.newSingleThreadScheduledExecutor().apply {
             this.scheduleAtFixedRate(
@@ -53,6 +45,9 @@ class MemoryPlugin(
 
     override fun stop() {
         super.stop()
+
+        GCDump.stop()
+
         mExecutorService?.shutdownNow()
         mExecutorService = null
     }
@@ -64,6 +59,10 @@ class MemoryPlugin(
     fun printMemoryInfo(): String {
         val stringBuilder = StringBuilder()
         MemoryDump.dump(stringBuilder)
+
+        stringBuilder.appendLine()
+        GCDump.dump(stringBuilder)
+
         return stringBuilder.toString()
     }
 
